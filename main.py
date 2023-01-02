@@ -1,9 +1,9 @@
-import tkinter
 from tkinter import *
 from tkinter.filedialog import *
 import os
-import subprocess
-import psutil
+from subprocess import Popen
+from psutil import process_iter
+from tkextrafont import Font
 
 master = Tk()
 master.overrideredirect(True)
@@ -13,8 +13,8 @@ master.geometry("400x600+200+200")
 master.title("Fortnite Settings Manager")
 
 profile = 1
-
 try:
+    importfont = Font(file="Fortnite.ttf", family="Fortnite")
     mainfont = "Fortnite 15 bold"
     bigfont = "Fortnite 20 bold"
     smallfont = "Arial 10"
@@ -159,7 +159,7 @@ def importprofile(profile):
 def applytogame():
     global profile
     running = False
-    for p in psutil.process_iter():
+    for p in process_iter():
         if "FortniteClient" in p.name():
             bodycanvas.itemconfig(runningtext, text="Please Close Fortnite Before Applying To Game")
             running = True
@@ -248,11 +248,11 @@ Button(master, bg="#FFFFFF", fg="#23293f", activebackground="#FFFFFF", activefor
 Button(master, bg="#FFFFFF", fg="#23293f", activebackground="#FFFFFF", activeforeground="#505465", text="Import Profile", font=mainfont, command=lambda:importprofile(profile)).place(x=360, y=385, anchor=NE, relwidth=0.4, relheight=0.1)
 Button(master, bg="#FFFFFF", fg="#23293f", text="Save Current Game Settings To Profile", font=mainfont, command=lambda:savetoprofile(profile,profilertext.get())).place(x=200, y=450, anchor=N, relwidth=0.8, relheight=0.1)
 Button(master, bg="#23293f", fg="#FFFFFF", activebackground="#505465", activeforeground="#FFFFFF", text="Apply Profile To Game", font=mainfont, command=lambda:applytogame()).place(x=200, y=515, anchor=N, relwidth=0.8, relheight=0.1)
-Button(master, bg="#23293f", fg="#FFFFFF", activebackground="#505465", activeforeground="#FFFFFF", text="↪", command=lambda:subprocess.Popen(r'explorer /select,"%s"'%(mainfnsettings))).place(x=400, y=600, anchor=SE, width=20, height=20)
+Button(master, bg="#23293f", fg="#FFFFFF", activebackground="#505465", activeforeground="#FFFFFF", text="↪", command=lambda:Popen(r'explorer /select,"%s"'%(mainfnsettings))).place(x=400, y=600, anchor=SE, width=20, height=20)
 runningtext = bodycanvas.create_text(200, 537, anchor=S, font=smallfont, text="", fill="#FFFFFF", justify=CENTER)
 
 if "Arial" in mainfont:
-    bodycanvas.itemconfig(runningtext, text="Fortnite font missing - Please install Fortnite.otf")
+    bodycanvas.itemconfig(runningtext, text="Fortnite font missing - Please install Fortnite.ttf")
 
 def keydown(event):
     if len(profilertext.get()) > 12:
