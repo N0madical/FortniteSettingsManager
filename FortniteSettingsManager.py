@@ -69,6 +69,12 @@ if not os.path.isfile(settingsfile):
     createfile.write("\nSyncedSettings=[bMotionBlur, bShowFPS, LatencyTweak2, FortAntiAliasingMethod, TemporalSuperResolutionQuality, bRayTracing, RayTracingShadowsQuality, RayTracingReflectionsQuality, RayTracingAmbientOcclusionQuality, RayTracingAOQuality, RayTracingGIQuality, FrontendFrameRateLimit, DisplayGamma, UserInterfaceContrast, bUseHeadphoneMode, bDisableMouseAcceleration, bUseVSync, bUseDynamicResolution, ResolutionSizeX, ResolutionSizeY, AudioQualityLevel, FrameRateLimit, bUseNanite, DesiredGlobalIlluminationQuality, DesiredReflectionQuality, sg.ResolutionQuality, sg.ViewDistanceQuality, sg.AntiAliasingQuality, sg.ShadowQuality, sg.PostProcessQuality, sg.TextureQuality, sg.EffectsQuality, sg.FoliageQuality, sg.ShadingQuality, PreferredFeatureLevel, PreferredRHI, MeshQuality]")
     createfile.close()
 
+if not os.path.isfile(settingsdir + "\GameUserSettingsDocumentation.txt"):
+    copyfile = open(resource_path("dependencies/GameUserSettingsDocumentation.txt"), "r")
+    writefile = open((settingsdir + "\GameUserSettingsDocumentation.txt"), "w")
+    for line in copyfile:
+        writefile.write(line)
+
 def readconfig(location):
     config = {}
     configfile = open(location, "r")
