@@ -1,9 +1,21 @@
-from tkinter import *
-from tkinter.filedialog import *
-import os
-from subprocess import Popen
-from psutil import process_iter
-from tkextrafont import Font
+try:
+    from tkinter import *
+    from tkinter.filedialog import *
+    import os
+    from subprocess import Popen
+    from psutil import process_iter
+    from tkextrafont import Font
+except:
+    from subprocess import check_call
+    import sys
+    check_call([sys.executable, '-m', 'pip', 'install', 'psutil'])
+    check_call([sys.executable, '-m', 'pip', 'install', 'tkextrafont'])
+    from tkinter import *
+    from tkinter.filedialog import *
+    import os
+    from subprocess import Popen
+    from psutil import process_iter
+    from tkextrafont import Font
 
 master = Tk()
 master.overrideredirect(True)
@@ -13,6 +25,7 @@ master.geometry("400x600+200+200")
 master.title("Fortnite Settings Manager")
 
 profile = 1
+
 try:
     importfont = Font(file="Fortnite.ttf", family="Fortnite")
     mainfont = "Fortnite 15 bold"
@@ -22,6 +35,8 @@ except:
     mainfont = "Arial 12 bold"
     bigfont = "Arial 20 bold"
     smallfont = "Arial 10"
+
+print (os.getcwd())
 
 settingsdir = os.path.expanduser('~') + "\AppData\Local\FortniteGame\Saved\Config\WindowsClient"
 pgmdir = settingsdir + "\FNsettingsmanager"
@@ -190,15 +205,7 @@ for i in range(1, 6):
     if not os.path.isfile(pgmdir + "\Profile%d.txt" % (i)):
         savetoprofile(i,("Profile%d"%(i)))
 
-backgroundimage = PhotoImage(file ="images/backgroundimage.png")
-fnlogo = PhotoImage(file ="images/pglogo.png")
-fnx = PhotoImage(file ="images/fnx.png")
-chooseprofile = PhotoImage(file="images/ChooseYourProfile.png")
-hiddensettings = PhotoImage(file="images/HiddenSettings.png")
-on = PhotoImage(file="images/on.png")
-off = PhotoImage(file="images/off.png")
-showgrass = PhotoImage(file="images/showgrass.png")
-lobbyfps = PhotoImage(file="images/lobbyfpscap.png")
+backgroundimage = PhotoImage(file="images/backgroundimage.png")
 
 background = Canvas(master, highlightthickness=0)
 bgimageholder = background.create_image(0, 0, anchor=NW, image=backgroundimage)
@@ -210,14 +217,14 @@ topcanvas = Canvas(master, highlightthickness=0)
 topcanvas.place(x=0, y=0, relwidth=1, relheight=1)
 topcanvas.create_image(0, 0, image=backgroundimage, anchor=NW)
 topcanvas.create_polygon(0,0,400,0,400,50,0,60, fill="#24293f")
-topcanvas.create_image(10, 25, image=fnlogo, anchor=W)
-xbutton = topcanvas.create_image(380,28, anchor=CENTER, image=fnx)
+topcanvas.create_text(10, 25, anchor=W, text="Fortnite Settings Manager", font="Fortnite 24", fill="#ffffff")
+xbutton = topcanvas.create_text(380,28, anchor=CENTER, text="X", font="Fortnite 24", fill="#ffffff")
 
 bodycanvas = Canvas(master, highlightthickness=0)
 bodycanvas.place(x=0,y=60,anchor=NW, relwidth=1, relheight=1)
 bodycanvas.create_image(0, -50, image=backgroundimage, anchor=NW)
-bodycanvas.create_image(200,20, image=chooseprofile, anchor=N)
-bodycanvas.create_image(200,150, image=hiddensettings, anchor=N)
+bodycanvas.create_text(200,25, anchor=N, text="Choose Your Profile", fill="#24293f", font="Fortnite 23")
+bodycanvas.create_text(200,155, anchor=N, text="Manage Hidden Settings", fill="#24293f", font="Fortnite 23")
 
 profileleft = Button(master, bg="#FFFFFF", activebackground="#cce0fa", relief="raised", text="<", font=mainfont, command=lambda:switchprofile(0))
 profileright = Button(master, bg="#FFFFFF", activebackground="#cce0fa", relief="raised", text=">", font=mainfont, command=lambda:switchprofile(1))
@@ -231,7 +238,7 @@ Button(master, bg="#FFFFFF", activebackground="#cce0fa", relief="raised", text="
 Button(master, bg="#FFFFFF", activebackground="#cce0fa", relief="raised", text=">", font=mainfont, command=lambda:togglegrass()).place(x= 360, y= 280, anchor=CENTER, relwidth=0.15, relheight=0.1*(400/600))
 bodycanvas.create_rectangle(260-60, 280-60-20, 260+60, 280-60+20, fill="#FFFFFF", outline="#FFFFFF")
 grasslabel = bodycanvas.create_text(260, 282-60, text="Off", anchor=CENTER, font=bigfont)
-grasstitle = bodycanvas.create_image(65, 280-60, image=showgrass, anchor=CENTER)
+bodycanvas.create_text(65, 280-60, text="Show Grass", font="Fortnite 18", fill="#24293f")
 
 if grasstoggle == 3:
     bodycanvas.itemconfig(grasslabel, text="On")
@@ -242,7 +249,7 @@ Button(master, bg="#FFFFFF", activebackground="#cce0fa", relief="raised", text="
 Button(master, bg="#FFFFFF", activebackground="#cce0fa", relief="raised", text=">", font=mainfont, command=lambda:inclobfpscap(5)).place(x= 360, y= 330, anchor=CENTER, relwidth=0.15, relheight=0.1*(400/600))
 bodycanvas.create_rectangle(260-60, 330-60-20, 260+60, 330-60+20, fill="#FFFFFF", outline="#FFFFFF")
 lobbyfpslabel = bodycanvas.create_text(260, 332-60, text=lobbyfpscap, font=bigfont, anchor=CENTER)
-lobbyfpstitle = bodycanvas.create_image(65, 330-60, image=lobbyfps, anchor=CENTER)
+bodycanvas.create_text(65, 330-60, anchor=CENTER, text="Lobby Fps Cap", font="Fortnite 17", fill="#24293f")
 
 Button(master, bg="#FFFFFF", fg="#23293f", activebackground="#FFFFFF", activeforeground="#505465", text="Export Profile", font=mainfont, command=lambda:exportprofile()).place(x=40, y=385, anchor=NW, relwidth=0.4, relheight=0.1)
 Button(master, bg="#FFFFFF", fg="#23293f", activebackground="#FFFFFF", activeforeground="#505465", text="Import Profile", font=mainfont, command=lambda:importprofile(profile)).place(x=360, y=385, anchor=NE, relwidth=0.4, relheight=0.1)
