@@ -2,19 +2,17 @@ from tkinter import *
 from tkinter.filedialog import *
 import os
 from subprocess import Popen
-#try:
-from psutil import process_iter
-from tkextrafont import Font
-'''
+import sys
+try:
+    from psutil import process_iter
+    from tkextrafont import Font
 except:
     print("couldn't detect imports")
     from subprocess import check_call
-    import sys
     check_call([sys.executable, '-m', 'pip', 'install', 'psutil'])
     check_call([sys.executable, '-m', 'pip', 'install', 'tkextrafont'])
     from psutil import process_iter
     from tkextrafont import Font
-'''
 
 root = Tk()
 master = Toplevel(root)
@@ -25,20 +23,33 @@ master.geometry("400x600+200+200")
 master.title("Fortnite Settings Manager")
 root.title("Fortnite Settings Manager")
 root.attributes("-alpha",0.0)
-root.iconbitmap("dependencies/fsmlogo.ico")
 
 profile = 1
 hide = False
 
-#try:
-importfont = Font(file="dependencies/Fortnite.ttf", family="Fortnite")
-mainfont = "Fortnite 15 bold"
-bigfont = "Fortnite 20 bold"
-smallfont = "Arial 10"
-#except:
-    #mainfont = "Arial 12 bold"
-    #bigfont = "Arial 20 bold"
-    #smallfont = "Arial 10"
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+print(resource_path("dependencies/Fortnite.ttf"))
+root.iconbitmap(resource_path("dependencies/fsmlogo.ico"))
+master.iconbitmap(resource_path("dependencies/fsmlogo.ico"))
+
+try:
+    importfont = Font(file=resource_path("dependencies/Fortnite.ttf"), family="Fortnite")
+    mainfont = "Fortnite 15 bold"
+    bigfont = "Fortnite 20 bold"
+    smallfont = "Arial 10"
+except:
+    mainfont = "Arial 12 bold"
+    bigfont = "Arial 20 bold"
+    smallfont = "Arial 10"
 
 settingsdir = os.path.expanduser('~') + "\AppData\Local\FortniteGame\Saved\Config\WindowsClient"
 pgmdir = settingsdir + "\FNsettingsmanager"
@@ -213,7 +224,7 @@ for i in range(1, 6):
     if not os.path.isfile(pgmdir + "\Profile%d.txt" % (i)):
         savetoprofile(i,("Profile%d"%(i)))
 
-backgroundimage = PhotoImage(file="dependencies/backgroundimage.png")
+backgroundimage = PhotoImage(file=resource_path("dependencies/backgroundimage.png"))
 
 background = Canvas(master, highlightthickness=0)
 bgimageholder = background.create_image(0, 0, anchor=NW, image=backgroundimage)
